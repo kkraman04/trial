@@ -1,0 +1,25 @@
+name: Auto-reply to Issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Send an automatic reply
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const issueNumber = context.issue.number;
+          const commentBody = `Thank you for opening this issue! We will look into it as soon as possible. In the meantime, please ensure you've followed our issue template and provided all necessary information.`;
+
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: issueNumber,
+            body: commentBody
+          });
